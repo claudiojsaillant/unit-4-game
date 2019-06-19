@@ -20,9 +20,11 @@
 </head>
 
 <body>
+    <h1 id="gametitle">Star Wars Game</h1>
     <div class="container">
-
+        <h2 id="character"></h2>
         <div class="row" id="row1">
+
             <div class="img" id="img1" value="1">
                 <p>name</p>
                 <img src="assets/images/ayuwoki.jpg" alt="">
@@ -48,9 +50,9 @@
         <p>Picture should go here</p>
         <div class="row" id="row2">
             <div class="" id="moved">
-                    
+
             </div>
-            
+
 
 
 
@@ -66,32 +68,37 @@
         })
 
         function changeRow(value) {
+            $("#character").text("Your Character")
             if (value === '1') {
-            
+
                 $("#img2").appendTo("#row2");
                 $("#img3").appendTo("#row2");
                 $("#img4").appendTo("#row2");
             }
             else if (value === '2') {
-           
+
                 $("#img1").appendTo("#row2");
                 $("#img3").appendTo("#row2");
                 $("#img4").appendTo("#row2");
             }
             else if (value === '3') {
-        
+
                 $("#img1").appendTo("#row2");
                 $("#img2").appendTo("#row2");
                 $("#img4").appendTo("#row2");
             }
             else if (value === '4') {
-                
+
                 $("#img1").appendTo("#row2");
                 $("#img2").appendTo("#row2");
                 $("#img3").appendTo("#row2");
             }
+        }
+        function startGame() {
 
+        }
 
+        function game() {
 
         }
 
