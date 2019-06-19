@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="row" id="row1">
+            <div class="img" id="img1" value="1">
+                <p>name</p>
+                <img src="assets/images/ayuwoki.jpg" alt="">
+                <p>number</p>
+            </div>
+            <div class="img" id="img2" value="2">
+                <p>name</p>
+                <img src="assets/images/madonna.jpg" alt="">
+                <p>number</p>
+            </div>
+            <div class="img" id="img3" value="3">
+                <p>name</p>
+                <img src="assets/images/seventies.jpg" alt="">
+                <p>number</p>
+            </div>
+
+            <div class="img" id="img4" value="4">
+                <p class="p">name</p>
+                <img src="assets/images/hangman.png" alt="">
+                <p>number</p>
+            </div>
+        </div>
+        <p>Picture should go here</p>
+        <div class="row" id="row2">
+            <div class="" id="moved">
+                    
+            </div>
+            
+
+
+
+
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(".img").on("click", function () {
+            var imgVal = $(this).attr('value')
+            changeRow(imgVal);
+        })
+
+        function changeRow(value) {
+            if (value === '1') {
+            
+                $("#img2").appendTo("#row2");
+                $("#img3").appendTo("#row2");
+                $("#img4").appendTo("#row2");
+            }
+            else if (value === '2') {
+           
+                $("#img1").appendTo("#row2");
+                $("#img3").appendTo("#row2");
+                $("#img4").appendTo("#row2");
+            }
+            else if (value === '3') {
+        
+                $("#img1").appendTo("#row2");
+                $("#img2").appendTo("#row2");
+                $("#img4").appendTo("#row2");
+            }
+            else if (value === '4') {
+                
+                $("#img1").appendTo("#row2");
+                $("#img2").appendTo("#row2");
+                $("#img3").appendTo("#row2");
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
