@@ -1,22 +1,40 @@
-body {
-    background-color: blue;
-}
+
 img {
     width: 200px;
     height: 150px;
- 
+    
 }
-.row {
-    background-color: blue;
-}
-.img {
+
+
+.character  {
     background-color: white; 
-    border: green;
+    border: green;    
+    padding-left: 5px;
+    padding-right: 5px;
     border-style: solid;
     border-width: 3px;
 }
 
 div p, #gametitle {
     text-align: center;
+
+}
+
+.enemy {
+    background-color: red;
+    border: black;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-style: solid;
+    border-width: 3px;
+}
+
+.waiting {
+    background-color: red;
+    border: slategrey;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-style: solid;
+    border-width: 3px;
 
 }

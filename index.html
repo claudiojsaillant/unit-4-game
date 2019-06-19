@@ -25,75 +25,142 @@
         <h2 id="character"></h2>
         <div class="row" id="row1">
 
-            <div class="img" id="img1" value="1">
+            <div class="img character" id="img1" value="1">
                 <p>name</p>
                 <img src="assets/images/ayuwoki.jpg" alt="">
                 <p>number</p>
             </div>
-            <div class="img" id="img2" value="2">
+            <div class="img character" id="img2" value="2">
                 <p>name</p>
                 <img src="assets/images/madonna.jpg" alt="">
                 <p>number</p>
             </div>
-            <div class="img" id="img3" value="3">
+            <div class="img character" id="img3" value="3">
                 <p>name</p>
                 <img src="assets/images/seventies.jpg" alt="">
                 <p>number</p>
             </div>
 
-            <div class="img" id="img4" value="4">
+            <div class="img character" id="img4" value="4">
                 <p class="p">name</p>
                 <img src="assets/images/hangman.png" alt="">
                 <p>number</p>
             </div>
         </div>
-        <p>Picture should go here</p>
+        <p>Attacking</p>
         <div class="row" id="row2">
-            <div class="" id="moved">
 
-            </div>
-
-
-
-
-
+        </div>
+        <p>Defense position</p>
+        <div class="row" id="row3">
 
         </div>
     </div>
 
     <script type="text/javascript">
-        $(".img").on("click", function () {
+
+        var selected;
+
+        $(".character").on("click", function () {
             var imgVal = $(this).attr('value')
-            changeRow(imgVal);
+            console.log($(this).attr("class"));
+            if ($(this).attr("class") === "img character"){
+                changeRowChar(imgVal);
+            }
+            else if ($(this).attr("class") === "img enemy"){
+                console.log("ImgVal has to be 1: " +imgVal)
+                console.log("selected has to be 2: "+selected)
+                changeRowEnemy(imgVal, selected);
+            }
+            
         })
 
-        function changeRow(value) {
-            $("#character").text("Your Character")
-            if (value === '1') {
 
-                $("#img2").appendTo("#row2");
-                $("#img3").appendTo("#row2");
-                $("#img4").appendTo("#row2");
+        function changeRowChar(value) {
+
+            if (value === '1') {
+                selected = 1;
+                $("#character").text("Your Character")
+                $("#img2,#img3,#img4").appendTo("#row2");
+                $("#img2,#img3,#img4").removeClass("character").addClass("enemy");
             }
             else if (value === '2') {
+                selected = 2;
+                $("#character").text("Your Character")
+                $("#img1,#img3,#img4").appendTo("#row2");
+                $("#img1,#img3,#img4").removeClass("character").addClass("enemy");
 
-                $("#img1").appendTo("#row2");
-                $("#img3").appendTo("#row2");
-                $("#img4").appendTo("#row2");
+
             }
             else if (value === '3') {
+                selected = 3;
+                $("#character").text("Your Character")
+                $("#img1,#img2,#img4").appendTo("#row2");
+                $("#img1,#img2,#img4").removeClass("character").addClass("enemy");
 
-                $("#img1").appendTo("#row2");
-                $("#img2").appendTo("#row2");
-                $("#img4").appendTo("#row2");
             }
             else if (value === '4') {
+                selected = 4;
+                $("#character").text("Your Character")
+                $("#img1,#img2,#img3").appendTo("#row2");
+                $("#img1,#img2,#img3").removeClass("character").addClass("enemy");
 
-                $("#img1").appendTo("#row2");
-                $("#img2").appendTo("#row2");
-                $("#img3").appendTo("#row2");
             }
         }
+
+        function changeRowEnemy(value, selected) {
+            console.log("Facebook")
+            if(value === "2" && selected === 1) {
+                $("#img3,#img4").appendTo("#row3");
+                $("#img3,#img4").addClass("waiting");
+            }
+            else if(value ==="3" && selected === 1) {
+                $("#img2,#img4").appendTo("#row3");
+                $("#img2,#img4").addClass("waiting");
+            }
+            else if(value ==="4" && selected === 1) {
+                $("#img2,#img3").appendTo("#row3");
+                $("#img2,#img3").addClass("waiting");
+            }
+            else if(value === "1" && selected === 2) {
+                $("#img3,#img4").appendTo("#row3");
+                $("#img3,#img4").addClass("waiting");
+            }
+            else if(value ==="3" && selected === 2) {
+                $("#img1,#img4").appendTo("#row3");
+                $("#img1,#img4").addClass("waiting");
+            }
+            else if(value ==="4" && selected === 2) {
+                $("#img1,#img3").appendTo("#row3");
+                $("#img1,#img3").addClass("waiting");
+            }
+            else if(value === "1" && selected === 3) {
+                $("#img2,#img4").appendTo("#row3");
+                $("#img2,#img4").addClass("waiting");
+            }
+            else if(value ==="2" && selected === 3) {
+                $("#img1,#img4").appendTo("#row3");
+                $("#img1,#img4").addClass("waiting");
+            }
+            else if(value ==="4" && selected === 3) {
+                $("#img1,#img2").appendTo("#row3");
+                $("#img1,#img2").addClass("waiting");
+            }
+            else if(value === "1" && selected === 4) {
+                $("#img2,#img3").appendTo("#row3");
+                $("#img2,#img3").addClass("waiting");
+            }
+            else if(value ==="3" && selected === 4) {
+                $("#img1,#img2").appendTo("#row3");
+                $("#img1,#img2").addClass("waiting");
+            }
+            else if(value ==="2" && selected === 4) {
+                $("#img1,#img3").appendTo("#row3");
+                $("#img1,#img3").addClass("waiting");
+            }
+        }
+
+
         function startGame() {
 
         }
