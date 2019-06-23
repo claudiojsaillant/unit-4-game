@@ -64,16 +64,17 @@
 
 
     <script type="text/javascript">
-        var iterations = true;
+
         var posiblePicks = ['img1', 'img2', 'img3', 'img4'];
-        var characterChosen;
+        var character;
         var actualEnemy;
         var waiting = [];
         var characterHP = '';
         var enemyHP = '';
         var enemyAttack = '';
         var characterAttack = '';
-
+       
+        var defeated = 0;
 
         //Object
         var attacking = [];
@@ -129,13 +130,11 @@
         }
 
         function insideCharacter(array) {
-
             for (i = 0; i < array.length; i++) {
                 var indexArray = '#' + array[i];
                 $("#row2").append($(indexArray));
                 $(indexArray).removeClass("character").addClass("enemy");
                 $(indexArray).attr('value', 'enemy');
-
             }
         };
 
@@ -177,17 +176,23 @@
                     enemyAttack = element.attack;
                 }
             });
+
             gameObject.characters.forEach(element => {
 
                 if (element.divid.includes(character)) {
                     element.hp = element.hp - enemyAttack;
                     console.log(element.hp)
+                    if (element.hp < 0) {
+                        characterElement = '#' + character;
+                        $(characterElement).remove();
+                    }
                 }
                 if (element.divid.includes(actualEnemy)) {
                     element.hp = element.hp - characterAttack;
                     if(element.hp < 0) {
                         enemyElement = '#' + actualEnemy;
                         $(enemyElement).remove();
+                        defeated++;
                     }
                 }
             })
