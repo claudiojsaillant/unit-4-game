@@ -25,31 +25,35 @@
         <h2 id="character"></h2>
         <div class="row" id="row1">
 
-            <div class="img character" id="img1" value="1">
-                <p>name</p>
-                <img src="assets/images/ayuwoki.jpg" alt="">
-                <p>number</p>
+            <div class="img character" id="img1" value="character">
+                <p id="name1">name</p>
+                <img id="one" src="" alt="">
+                <p id="hp1">number</p>
             </div>
-            <div class="img character" id="img2" value="2">
-                <p>name</p>
-                <img src="assets/images/madonna.jpg" alt="">
-                <p>number</p>
+            <div class="img character" id="img2" value="character">
+                <p id="name2">name</p>
+                <img id="two" src="" alt="">
+                <p id="hp2">number</p>
             </div>
-            <div class="img character" id="img3" value="3">
-                <p>name</p>
-                <img src="assets/images/seventies.jpg" alt="">
-                <p>number</p>
+            <div class="img character" id="img3" value="character">
+                <p id="name3">name</p>
+                <img id="three" src="" alt="">
+                <p id="hp3">number</p>
             </div>
 
-            <div class="img character" id="img4" value="4">
-                <p class="p">name</p>
-                <img src="assets/images/hangman.png" alt="">
-                <p>number</p>
+            <div class="img character" id="img4" value="character">
+                <p id="name4">name</p>
+                <img id="four" src="" alt="">
+                <p id="hp4">number</p>
             </div>
+
         </div>
         <p>Attacking</p>
         <div class="row" id="row2">
 
+        </div>
+        <div class="row">
+            <button type="button" class="btn btn-danger" id="attackButton">Attack</button>
         </div>
         <p>Defense position</p>
         <div class="row" id="row3">
@@ -57,117 +61,179 @@
         </div>
     </div>
 
+
+
     <script type="text/javascript">
+        var iterations = true;
+        var posiblePicks = ['img1', 'img2', 'img3', 'img4'];
+        var characterChosen;
+        var actualEnemy;
+        var waiting = [];
+        var characterHP = '';
+        var enemyHP = '';
+        var enemyAttack = '';
+        var characterAttack = '';
 
-        var selected;
 
-        $(".character").on("click", function () {
-            var imgVal = $(this).attr('value')
-            console.log($(this).attr("class"));
-            if ($(this).attr("class") === "img character"){
-                changeRowChar(imgVal);
+        //Object
+        var attacking = [];
+        var gameObject = {
+            characters: [{
+                hpp: '#hp1',
+                pname: '#name1',
+                name: "Obi-Wan Kenobi",
+                attack: 20,
+                hp: 110,
+                increaseAttack: 15,
+                imgSource: "assets/images/ayuwoki.jpg",
+                value: '1',
+                divid: "#img1",
+                imgid: "#one",
+            },
+            {
+                hpp: '#hp2',
+                pname: '#name2',
+                name: "Dark Vader",
+                attack: 25,
+                hp: 100,
+                increaseAttack: 10,
+                imgSource: "assets/images/madonna.jpg",
+                value: '2',
+                divid: "#img2",
+                imgid: "#two"
+            },
+            {
+                hpp: '#hp3',
+                pname: '#name3',
+                name: "Luke Skywalker",
+                attack: 23,
+                hp: 120,
+                increaseAttack: 30,
+                imgSource: "assets/images/seventies.jpg",
+                value: '3',
+                divid: "#img3",
+                imgid: "#three"
+            },
+            {
+                hpp: '#hp4',
+                pname: '#name4',
+                name: "Master Yoda",
+                attack: 40,
+                hp: 70,
+                increaseAttack: 30,
+                imgSource: "assets/images/hangman.png",
+                value: '4',
+                divid: "#img4",
+                imgid: "#four"
+            }]
+        }
+
+        function insideCharacter(array) {
+
+            for (i = 0; i < array.length; i++) {
+                var indexArray = '#' + array[i];
+                $("#row2").append($(indexArray));
+                $(indexArray).removeClass("character").addClass("enemy");
+                $(indexArray).attr('value', 'enemy');
+
             }
-            else if ($(this).attr("class") === "img enemy"){
-                console.log("ImgVal has to be 1: " +imgVal)
-                console.log("selected has to be 2: "+selected)
-                changeRowEnemy(imgVal, selected);
+        };
+
+        function insideEnemy(array) {
+            for (i = 0; i < array.length; i++) {
+                var indexArray = '#' + array[i];
+                $("#row3").append($(indexArray));
+                $(indexArray).removeClass("enemy").addClass("waiting");
+                $(indexArray).attr('value', 'waiting');
             }
-            
+        };
+
+        function elementGenerator() {
+            gameObject.characters.forEach(element => {
+                //Images
+                var src = $(element.imgid).attr('src', element.imgSource);
+                src = element.imgSource;
+
+                //Name
+                $(element.pname).text(element.name);
+
+                //hp
+                $(element.hpp).text(element.hp);
+            });
+        };
+        elementGenerator();
+
+        function attack() {
+
+            gameObject.characters.forEach(element => {
+                if (element.divid.includes(character)) {
+                    characterHP = element.hp;
+                    characterAttack = element.attack;
+                    element.attack = element.attack + element.increaseAttack;
+                }
+                if (element.divid.includes(actualEnemy)) {
+                    
+                    enemyHP = element.hp;
+                    enemyAttack = element.attack;
+                }
+            });
+            gameObject.characters.forEach(element => {
+
+                if (element.divid.includes(character)) {
+                    element.hp = element.hp - enemyAttack;
+                    console.log(element.hp)
+                }
+                if (element.divid.includes(actualEnemy)) {
+                    element.hp = element.hp - characterAttack;
+                    if(element.hp < 0) {
+                        enemyElement = '#' + actualEnemy;
+                        $(enemyElement).remove();
+                    }
+                }
+            })
+
+            elementGenerator();
+        }
+
+
+
+
+        $('.character').on('click', function () {
+            console.log($(this).attr('value'));
+
+            if ($(this).attr('value') === 'character') {
+                character = $(this).attr('id');
+                var newArray = function (posibleNums) {
+                    return posibleNums != character
+                }
+                posiblePicks = posiblePicks.filter(newArray);
+                insideCharacter(posiblePicks);
+            }
+            else if ($(this).attr('value') === 'enemy') {
+                actualEnemy = $(this).attr('id');
+                var newArray = function (posibleNums) {
+                    return posibleNums != actualEnemy;
+                }
+                posiblePicks = posiblePicks.filter(newArray);
+                insideEnemy(posiblePicks);
+            }
+
+            else if ($(this).attr('value') === 'waiting') {
+                $(this).attr('value', 'enemy');
+                $("#row2").append($(this));
+                $(this).removeClass("waiting").addClass("enemy");
+                actualEnemy = $(this).attr('id');
+            }
+        });
+
+
+        $('#attackButton').on('click', function () {
+
+            attack();
+
         })
 
 
-        function changeRowChar(value) {
-
-            if (value === '1') {
-                selected = 1;
-                $("#character").text("Your Character")
-                $("#img2,#img3,#img4").appendTo("#row2");
-                $("#img2,#img3,#img4").removeClass("character").addClass("enemy");
-            }
-            else if (value === '2') {
-                selected = 2;
-                $("#character").text("Your Character")
-                $("#img1,#img3,#img4").appendTo("#row2");
-                $("#img1,#img3,#img4").removeClass("character").addClass("enemy");
-
-
-            }
-            else if (value === '3') {
-                selected = 3;
-                $("#character").text("Your Character")
-                $("#img1,#img2,#img4").appendTo("#row2");
-                $("#img1,#img2,#img4").removeClass("character").addClass("enemy");
-
-            }
-            else if (value === '4') {
-                selected = 4;
-                $("#character").text("Your Character")
-                $("#img1,#img2,#img3").appendTo("#row2");
-                $("#img1,#img2,#img3").removeClass("character").addClass("enemy");
-
-            }
-        }
-
-        function changeRowEnemy(value, selected) {
-            console.log("Facebook")
-            if(value === "2" && selected === 1) {
-                $("#img3,#img4").appendTo("#row3");
-                $("#img3,#img4").addClass("waiting");
-            }
-            else if(value ==="3" && selected === 1) {
-                $("#img2,#img4").appendTo("#row3");
-                $("#img2,#img4").addClass("waiting");
-            }
-            else if(value ==="4" && selected === 1) {
-                $("#img2,#img3").appendTo("#row3");
-                $("#img2,#img3").addClass("waiting");
-            }
-            else if(value === "1" && selected === 2) {
-                $("#img3,#img4").appendTo("#row3");
-                $("#img3,#img4").addClass("waiting");
-            }
-            else if(value ==="3" && selected === 2) {
-                $("#img1,#img4").appendTo("#row3");
-                $("#img1,#img4").addClass("waiting");
-            }
-            else if(value ==="4" && selected === 2) {
-                $("#img1,#img3").appendTo("#row3");
-                $("#img1,#img3").addClass("waiting");
-            }
-            else if(value === "1" && selected === 3) {
-                $("#img2,#img4").appendTo("#row3");
-                $("#img2,#img4").addClass("waiting");
-            }
-            else if(value ==="2" && selected === 3) {
-                $("#img1,#img4").appendTo("#row3");
-                $("#img1,#img4").addClass("waiting");
-            }
-            else if(value ==="4" && selected === 3) {
-                $("#img1,#img2").appendTo("#row3");
-                $("#img1,#img2").addClass("waiting");
-            }
-            else if(value === "1" && selected === 4) {
-                $("#img2,#img3").appendTo("#row3");
-                $("#img2,#img3").addClass("waiting");
-            }
-            else if(value ==="3" && selected === 4) {
-                $("#img1,#img2").appendTo("#row3");
-                $("#img1,#img2").addClass("waiting");
-            }
-            else if(value ==="2" && selected === 4) {
-                $("#img1,#img3").appendTo("#row3");
-                $("#img1,#img3").addClass("waiting");
-            }
-        }
-
-
-        function startGame() {
-
-        }
-
-        function game() {
-
-        }
 
 
 
@@ -177,6 +243,191 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //  variables/ Dom manipulation
+//         var characterSelected;
+//         var check = true;
+//         var selected;
+//         var selectedEnemy;
+//         $("#name1").text(gameObject.img1.name);
+//         $("#name2").text(gameObject.img2.name);
+//         $("#name3").text(gameObject.img3.name);
+//         $("#name4").text(gameObject.img4.name);
+//         $("#hp1").text("hp: " + gameObject.img1.hp);
+//         $("#hp2").text("hp: " + gameObject.img2.hp);
+//         $("#hp3").text("hp: " + gameObject.img3.hp);
+//         $("#hp4").text("hp: " + gameObject.img4.hp);
+
+//         // Functions
+
+//         $(".character").on("click", function () {
+//             var imgVal = $(this).attr('value')
+//             console.log($(this).attr("class"));
+//             if ($(this).attr("class") === "img character") {
+//                 changeRowChar(imgVal);
+//             }
+//             else if ($(this).attr("class") === "img enemy") {
+
+//                 changeRowEnemy(imgVal, selected);
+//                 if (check) {
+//                     var newDiv = $('#row2').append('<div id=attackdiv>');
+//                     newDiv.append('');
+//                     check = false;
+//                 }
+
+//             }
+
+//         })
+
+//         $("#attackButton").on("click", function () {
+//             getHp();
+//         })
+
+//         function changeRowChar(value) {
+
+//             if (value === '1') {
+//                 selected = 1;
+//                 $("#character").text("Your Character")
+//                 $("#img2,#img3,#img4").appendTo("#row2");
+//                 $("#img2,#img3,#img4").removeClass("character").addClass("enemy");
+//             }
+//             else if (value === '2') {
+//                 selected = 2;
+//                 $("#character").text("Your Character")
+//                 $("#img1,#img3,#img4").appendTo("#row2");
+//                 $("#img1,#img3,#img4").removeClass("character").addClass("enemy");
+
+
+//             }
+//             else if (value === '3') {
+//                 selected = 3;
+//                 $("#character").text("Your Character")
+//                 $("#img1,#img2,#img4").appendTo("#row2");
+//                 $("#img1,#img2,#img4").removeClass("character").addClass("enemy");
+
+//             }
+//             else if (value === '4') {
+//                 selected = 4;
+//                 $("#character").text("Your Character")
+//                 $("#img1,#img2,#img3").appendTo("#row2");
+//                 $("#img1,#img2,#img3").removeClass("character").addClass("enemy");
+//             }
+//         }
+
+//         function changeRowEnemy(value, selected) {
+
+//             if (value === "2" && selected === 1) {
+//                 selectedEnemy = 2;
+//                 $("#img3,#img4").appendTo("#row3");
+//                 $("#img3,#img4").addClass("waiting");
+//             }
+//             else if (value === "3" && selected === 1) {
+//                 selectedEnemy = 3;
+//                 $("#img2,#img4").appendTo("#row3");
+//                 $("#img2,#img4").addClass("waiting");
+//             }
+//             else if (value === "4" && selected === 1) {
+//                 selectedEnemy = 4;
+//                 $("#img2,#img3").appendTo("#row3");
+//                 $("#img2,#img3").addClass("waiting");
+//             }
+//             else if (value === "1" && selected === 2) {
+//                 selectedEnemy = 1
+//                 $("#img3,#img4").appendTo("#row3");
+//                 $("#img3,#img4").addClass("waiting");
+//             }
+//             else if (value === "3" && selected === 2) {
+//                 selectedEnemy = 3;
+//                 $("#img1,#img4").appendTo("#row3");
+//                 $("#img1,#img4").addClass("waiting");
+//             }
+//             else if (value === "4" && selected === 2) {
+//                 selectedEnemy = 4;
+//                 $("#img1,#img3").appendTo("#row3");
+//                 $("#img1,#img3").addClass("waiting");
+//             }
+//             else if (value === "1" && selected === 3) {
+//                 selectedEnemy = 1;
+//                 $("#img2,#img4").appendTo("#row3");
+//                 $("#img2,#img4").addClass("waiting");
+//             }
+//             else if (value === "2" && selected === 3) {
+//                 selectedEnemy = 2;
+//                 $("#img1,#img4").appendTo("#row3");
+//                 $("#img1,#img4").addClass("waiting");
+//             }
+//             else if (value === "4" && selected === 3) {
+//                 selectedEnemy = 4;
+//                 $("#img1,#img2").appendTo("#row3");
+//                 $("#img1,#img2").addClass("waiting");
+//             }
+//             else if (value === "1" && selected === 4) {
+//                 selectedEnemy = 1;
+//                 $("#img2,#img3").appendTo("#row3");
+//                 $("#img2,#img3").addClass("waiting");
+//             }
+//             else if (value === "3" && selected === 4) {
+//                 selectedEnemy = 3
+//                 $("#img1,#img2").appendTo("#row3");
+//                 $("#img1,#img2").addClass("waiting");
+//             }
+//             else if (value === "2" && selected === 4) {
+//                 selectedEnemy = 2
+//                 $("#img1,#img3").appendTo("#row3");
+//                 $("#img1,#img3").addClass("waiting");
+//             }
+//         }
+
+//         function getHp() {
+
+//             var character = $('.character').attr('id').charAt(3);
+//             var charHp = '#hp' + character;
+//             var enemy = $('.enemy').attr('id').charAt(3);
+//             var enemyHp = '#hp' + enemy;
+//             console.log($(charHp).text());
+//             attack(character, enemy, charHp, enemyHp);
+
+//         }
+
+
+//         function attack(character, enemy, charHp, enemyHp) {
+//             console.log(enemy + character)
+//             if (enemy == '1' && character == '2') {
+//                 charHp;
+//                 enemyHp;
+//                 gameObject.img1.hp = gameObject.img1.hp - gameObject.img2.attack;
+//                 console.log(gameObject.img1.hp);
+//                 $("#hp1").text("hp: " + gameObject.img1.hp);
+//             }
+
+
+
+
+//         }
+
+//         function game() {
+
+//         }
 
 
     </script>
