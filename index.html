@@ -21,6 +21,7 @@
 
 <body>
     <h1 id="gametitle">Star Wars Game</h1>
+    <h2 id="message"></h2>
     <div class="container">
         <h2 id="character"></h2>
         <div class="row" id="row1">
@@ -73,19 +74,28 @@
         var enemyHP = '';
         var enemyAttack = '';
         var characterAttack = '';
-       
+        var attacking = [];
+
+        let audioLose = document.createElement("audio");
+        audioLose.setAttribute("src", "assets/sounds/lose.mp3");
+        let audioWin = document.createElement("audio");
+        audioWin.setAttribute("src", "assets/sounds/win.mp3");
+        let audioAttack = document.createElement("audio");
+        audioAttack.setAttribute("src", "assets/sounds/attack.mp3");
+        // for lose/win
+
         var defeated = 0;
 
         //Object
-        var attacking = [];
+
         var gameObject = {
             characters: [{
                 hpp: '#hp1',
                 pname: '#name1',
                 name: "Obi-Wan Kenobi",
-                attack: 20,
-                hp: 110,
-                increaseAttack: 15,
+                attack: 6,
+                hp: 150,
+                increaseAttack: 6,
                 imgSource: "assets/images/ayuwoki.jpg",
                 value: '1',
                 divid: "#img1",
@@ -95,9 +105,9 @@
                 hpp: '#hp2',
                 pname: '#name2',
                 name: "Dark Vader",
-                attack: 25,
-                hp: 100,
-                increaseAttack: 10,
+                attack: 8,
+                hp: 140,
+                increaseAttack: 5,
                 imgSource: "assets/images/madonna.jpg",
                 value: '2',
                 divid: "#img2",
@@ -107,9 +117,9 @@
                 hpp: '#hp3',
                 pname: '#name3',
                 name: "Luke Skywalker",
-                attack: 23,
-                hp: 120,
-                increaseAttack: 30,
+                attack: 8,
+                hp: 110,
+                increaseAttack: 6,
                 imgSource: "assets/images/seventies.jpg",
                 value: '3',
                 divid: "#img3",
@@ -119,9 +129,9 @@
                 hpp: '#hp4',
                 pname: '#name4',
                 name: "Master Yoda",
-                attack: 40,
-                hp: 70,
-                increaseAttack: 30,
+                attack: 9,
+                hp: 130,
+                increaseAttack: 5.5,
                 imgSource: "assets/images/hangman.png",
                 value: '4',
                 divid: "#img4",
@@ -158,9 +168,9 @@
 
                 //hp
                 $(element.hpp).text(element.hp);
+
             });
         };
-        elementGenerator();
 
         function attack() {
 
@@ -171,40 +181,43 @@
                     element.attack = element.attack + element.increaseAttack;
                 }
                 if (element.divid.includes(actualEnemy)) {
-                    
+
                     enemyHP = element.hp;
                     enemyAttack = element.attack;
                 }
             });
 
             gameObject.characters.forEach(element => {
-
                 if (element.divid.includes(character)) {
                     element.hp = element.hp - enemyAttack;
                     console.log(element.hp)
                     if (element.hp < 0) {
                         characterElement = '#' + character;
                         $(characterElement).remove();
+                        audioLose.play();
+                        $('#message').text('You lost the game!')
                     }
                 }
                 if (element.divid.includes(actualEnemy)) {
                     element.hp = element.hp - characterAttack;
-                    if(element.hp < 0) {
+                    if (element.hp < 0) {
                         enemyElement = '#' + actualEnemy;
                         $(enemyElement).remove();
                         defeated++;
+                        if (defeated === 3) {
+                            audioWin.play();
+                            $('#message').text('You won the game!')
+                        }
                     }
                 }
             })
-
             elementGenerator();
+
         }
 
 
 
-
         $('.character').on('click', function () {
-            console.log($(this).attr('value'));
 
             if ($(this).attr('value') === 'character') {
                 character = $(this).attr('id');
@@ -229,210 +242,18 @@
                 $(this).removeClass("waiting").addClass("enemy");
                 actualEnemy = $(this).attr('id');
             }
+
         });
 
 
         $('#attackButton').on('click', function () {
 
+            audioAttack.play();
             attack();
 
         })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //  variables/ Dom manipulation
-//         var characterSelected;
-//         var check = true;
-//         var selected;
-//         var selectedEnemy;
-//         $("#name1").text(gameObject.img1.name);
-//         $("#name2").text(gameObject.img2.name);
-//         $("#name3").text(gameObject.img3.name);
-//         $("#name4").text(gameObject.img4.name);
-//         $("#hp1").text("hp: " + gameObject.img1.hp);
-//         $("#hp2").text("hp: " + gameObject.img2.hp);
-//         $("#hp3").text("hp: " + gameObject.img3.hp);
-//         $("#hp4").text("hp: " + gameObject.img4.hp);
-
-//         // Functions
-
-//         $(".character").on("click", function () {
-//             var imgVal = $(this).attr('value')
-//             console.log($(this).attr("class"));
-//             if ($(this).attr("class") === "img character") {
-//                 changeRowChar(imgVal);
-//             }
-//             else if ($(this).attr("class") === "img enemy") {
-
-//                 changeRowEnemy(imgVal, selected);
-//                 if (check) {
-//                     var newDiv = $('#row2').append('<div id=attackdiv>');
-//                     newDiv.append('');
-//                     check = false;
-//                 }
-
-//             }
-
-//         })
-
-//         $("#attackButton").on("click", function () {
-//             getHp();
-//         })
-
-//         function changeRowChar(value) {
-
-//             if (value === '1') {
-//                 selected = 1;
-//                 $("#character").text("Your Character")
-//                 $("#img2,#img3,#img4").appendTo("#row2");
-//                 $("#img2,#img3,#img4").removeClass("character").addClass("enemy");
-//             }
-//             else if (value === '2') {
-//                 selected = 2;
-//                 $("#character").text("Your Character")
-//                 $("#img1,#img3,#img4").appendTo("#row2");
-//                 $("#img1,#img3,#img4").removeClass("character").addClass("enemy");
-
-
-//             }
-//             else if (value === '3') {
-//                 selected = 3;
-//                 $("#character").text("Your Character")
-//                 $("#img1,#img2,#img4").appendTo("#row2");
-//                 $("#img1,#img2,#img4").removeClass("character").addClass("enemy");
-
-//             }
-//             else if (value === '4') {
-//                 selected = 4;
-//                 $("#character").text("Your Character")
-//                 $("#img1,#img2,#img3").appendTo("#row2");
-//                 $("#img1,#img2,#img3").removeClass("character").addClass("enemy");
-//             }
-//         }
-
-//         function changeRowEnemy(value, selected) {
-
-//             if (value === "2" && selected === 1) {
-//                 selectedEnemy = 2;
-//                 $("#img3,#img4").appendTo("#row3");
-//                 $("#img3,#img4").addClass("waiting");
-//             }
-//             else if (value === "3" && selected === 1) {
-//                 selectedEnemy = 3;
-//                 $("#img2,#img4").appendTo("#row3");
-//                 $("#img2,#img4").addClass("waiting");
-//             }
-//             else if (value === "4" && selected === 1) {
-//                 selectedEnemy = 4;
-//                 $("#img2,#img3").appendTo("#row3");
-//                 $("#img2,#img3").addClass("waiting");
-//             }
-//             else if (value === "1" && selected === 2) {
-//                 selectedEnemy = 1
-//                 $("#img3,#img4").appendTo("#row3");
-//                 $("#img3,#img4").addClass("waiting");
-//             }
-//             else if (value === "3" && selected === 2) {
-//                 selectedEnemy = 3;
-//                 $("#img1,#img4").appendTo("#row3");
-//                 $("#img1,#img4").addClass("waiting");
-//             }
-//             else if (value === "4" && selected === 2) {
-//                 selectedEnemy = 4;
-//                 $("#img1,#img3").appendTo("#row3");
-//                 $("#img1,#img3").addClass("waiting");
-//             }
-//             else if (value === "1" && selected === 3) {
-//                 selectedEnemy = 1;
-//                 $("#img2,#img4").appendTo("#row3");
-//                 $("#img2,#img4").addClass("waiting");
-//             }
-//             else if (value === "2" && selected === 3) {
-//                 selectedEnemy = 2;
-//                 $("#img1,#img4").appendTo("#row3");
-//                 $("#img1,#img4").addClass("waiting");
-//             }
-//             else if (value === "4" && selected === 3) {
-//                 selectedEnemy = 4;
-//                 $("#img1,#img2").appendTo("#row3");
-//                 $("#img1,#img2").addClass("waiting");
-//             }
-//             else if (value === "1" && selected === 4) {
-//                 selectedEnemy = 1;
-//                 $("#img2,#img3").appendTo("#row3");
-//                 $("#img2,#img3").addClass("waiting");
-//             }
-//             else if (value === "3" && selected === 4) {
-//                 selectedEnemy = 3
-//                 $("#img1,#img2").appendTo("#row3");
-//                 $("#img1,#img2").addClass("waiting");
-//             }
-//             else if (value === "2" && selected === 4) {
-//                 selectedEnemy = 2
-//                 $("#img1,#img3").appendTo("#row3");
-//                 $("#img1,#img3").addClass("waiting");
-//             }
-//         }
-
-//         function getHp() {
-
-//             var character = $('.character').attr('id').charAt(3);
-//             var charHp = '#hp' + character;
-//             var enemy = $('.enemy').attr('id').charAt(3);
-//             var enemyHp = '#hp' + enemy;
-//             console.log($(charHp).text());
-//             attack(character, enemy, charHp, enemyHp);
-
-//         }
-
-
-//         function attack(character, enemy, charHp, enemyHp) {
-//             console.log(enemy + character)
-//             if (enemy == '1' && character == '2') {
-//                 charHp;
-//                 enemyHp;
-//                 gameObject.img1.hp = gameObject.img1.hp - gameObject.img2.attack;
-//                 console.log(gameObject.img1.hp);
-//                 $("#hp1").text("hp: " + gameObject.img1.hp);
-//             }
-
-
-
-
-//         }
-
-//         function game() {
-
-//         }
+        elementGenerator();
 
 
     </script>

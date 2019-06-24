@@ -15,7 +15,7 @@ img {
     border-width: 3px;
 }
 
-div p, #gametitle {
+div p, #gametitle, #message {
     text-align: center;
 
 }
