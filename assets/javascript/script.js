@@ -101,7 +101,6 @@ function elementGenerator() {
 
         //hp
         $(element.hpp).text(element.hp);
-
     });
 };
 
@@ -133,6 +132,7 @@ function attack() {
         if (element.divid.includes(actualEnemy)) {
             element.hp = element.hp - characterAttack;
             if (element.hp < 0) {
+                $('#attack').hide()
                 enemyElement = '#' + actualEnemy;
                 $(enemyElement).remove();
                 defeated++;
@@ -164,6 +164,7 @@ $('.character').on('click', function () {
         }
         posiblePicks = posiblePicks.filter(newArray);
         insideEnemy(posiblePicks);
+        $('#attack').show()
     }
 
     else if ($(this).attr('value') === 'waiting') {
@@ -171,12 +172,13 @@ $('.character').on('click', function () {
         $("#row2").append($(this));
         $(this).removeClass("waiting").addClass("enemy");
         actualEnemy = $(this).attr('id');
+        $('#attack').show()
     }
 
 });
 
 
-$('#attackButton').on('click', function () {
+$('#attack').on('click', function () {
 
     audioAttack.play();
     attack();
