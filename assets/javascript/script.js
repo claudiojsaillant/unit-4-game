@@ -9,7 +9,7 @@ audioAttack.setAttribute("src", "assets/sounds/attack.mp3");
 // Hiding the attack button so the user doesn't increase the attack without losing hp
 $('#attack').hide()
 
-//Object
+// Object
 var gameObject = {
     enemyAttack: '',
     characterAttack: '',
@@ -139,16 +139,16 @@ $(function() {
 $('.character').on('click', function () {
     if ($(this).attr('value') === 'character') {
         gameObject.choosenCharacter = $(this).attr('id');
-        var newArray = function (posibleNums) {
-            return posibleNums != gameObject.choosenCharacter
+        var newArray = function (posibleChamps) {
+            return posibleChamps != gameObject.choosenCharacter
         }
         gameObject.posiblePicks = gameObject.posiblePicks.filter(newArray);
         gameObject.characterSelect(gameObject.posiblePicks);
     }
     else if ($(this).attr('value') === 'enemy') {
         gameObject.choosenEnemy = $(this).attr('id');
-        var newArray = function (posibleNums) {
-            return posibleNums != gameObject.choosenEnemy;
+        var newArray = function (posibleChamps) {
+            return posibleChamps != gameObject.choosenEnemy;
         }
         gameObject.posiblePicks = gameObject.posiblePicks.filter(newArray);
         gameObject.enemySelect(gameObject.posiblePicks);
@@ -168,6 +168,7 @@ $('#attack').on('click', function () {
     gameObject.attack();
 })
 
+// Starting game
 gameObject.elementGenerator();
 
 });
