@@ -14,7 +14,7 @@ let audioWin = document.createElement("audio");
 audioWin.setAttribute("src", "assets/sounds/win.mp3");
 let audioAttack = document.createElement("audio");
 audioAttack.setAttribute("src", "assets/sounds/attack.mp3");
-
+$('#attack').hide()
 // for lose/win
 
 var defeated = 0;
@@ -30,7 +30,6 @@ var gameObject = {
         hp: 150,
         increaseAttack: 6,
         imgSource: "assets/images/obiwan.jpg",
-        value: '1',
         divid: "#img1",
         imgid: "#one",
     },
@@ -42,7 +41,6 @@ var gameObject = {
         hp: 140,
         increaseAttack: 5,
         imgSource: "assets/images/darkvader.jpeg",
-        value: '2',
         divid: "#img2",
         imgid: "#two"
     },
@@ -54,7 +52,6 @@ var gameObject = {
         hp: 110,
         increaseAttack: 6,
         imgSource: "assets/images/lukesky.jpeg",
-        value: '3',
         divid: "#img3",
         imgid: "#three"
     },
@@ -66,7 +63,6 @@ var gameObject = {
         hp: 130,
         increaseAttack: 5.5,
         imgSource: "assets/images/yoda.jpeg",
-        value: '4',
         divid: "#img4",
         imgid: "#four"
     }]
@@ -93,8 +89,7 @@ function insideEnemy(array) {
 function elementGenerator() {
     gameObject.characters.forEach(element => {
         //Images
-        var src = $(element.imgid).attr('src', element.imgSource);
-        src = element.imgSource;
+        $(element.imgid).attr('src', element.imgSource);
 
         //Name
         $(element.pname).text(element.name);
@@ -113,7 +108,6 @@ function attack() {
             element.attack = element.attack + element.increaseAttack;
         }
         if (element.divid.includes(actualEnemy)) {
-
             enemyHP = element.hp;
             enemyAttack = element.attack;
         }
