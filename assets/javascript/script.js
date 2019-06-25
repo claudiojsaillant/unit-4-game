@@ -1,27 +1,24 @@
-var posiblePicks = ['img1', 'img2', 'img3', 'img4'];
-var character;
-var actualEnemy;
-var waiting = [];
-var characterHP = '';
-var enemyHP = '';
-var enemyAttack = '';
-var characterAttack = '';
-var attacking = [];
-
+// Audio
 let audioLose = document.createElement("audio");
 audioLose.setAttribute("src", "assets/sounds/lose.mp3");
 let audioWin = document.createElement("audio");
 audioWin.setAttribute("src", "assets/sounds/win.mp3");
 let audioAttack = document.createElement("audio");
 audioAttack.setAttribute("src", "assets/sounds/attack.mp3");
-$('#attack').hide()
-// for lose/win
 
-var defeated = 0;
+// Hiding the attack button so the user doesn't increase the attack without losing hp
+$('#attack').hide()
 
 //Object
-
 var gameObject = {
+    enemyAttack: '',
+    characterAttack: '',
+    characterHP: '',
+    enemyHP: '',
+    charactersDefeated: 0,
+    choosenCharacter: '',
+    choosenEnemy: '',
+    posiblePicks: ['img1', 'img2', 'img3', 'img4'],
     characters: [{
         hpp: '#hp1',
         pname: '#name1',
@@ -65,119 +62,112 @@ var gameObject = {
         imgSource: "assets/images/yoda.jpeg",
         divid: "#img4",
         imgid: "#four"
-    }]
-}
+    }],
+    elementGenerator: function () {
+        this.characters.forEach(element => {
+            //Images
+            $(element.imgid).attr('src', element.imgSource);
 
-function insideCharacter(array) {
-    for (i = 0; i < array.length; i++) {
-        var indexArray = '#' + array[i];
-        $("#row2").append($(indexArray));
-        $(indexArray).removeClass("character").addClass("enemy");
-        $(indexArray).attr('value', 'enemy');
-    }
-};
+            //Name
+            $(element.pname).text(element.name);
 
-function insideEnemy(array) {
-    for (i = 0; i < array.length; i++) {
-        var indexArray = '#' + array[i];
-        $("#row3").append($(indexArray));
-        $(indexArray).removeClass("enemy").addClass("waiting");
-        $(indexArray).attr('value', 'waiting');
-    }
-};
-
-function elementGenerator() {
-    gameObject.characters.forEach(element => {
-        //Images
-        $(element.imgid).attr('src', element.imgSource);
-
-        //Name
-        $(element.pname).text(element.name);
-
-        //hp
-        $(element.hpp).text(element.hp);
-    });
-};
-
-function attack() {
-
-    gameObject.characters.forEach(element => {
-        if (element.divid.includes(character)) {
-            characterHP = element.hp;
-            characterAttack = element.attack;
-            element.attack = element.attack + element.increaseAttack;
+            //hp
+            $(element.hpp).text(element.hp);
+        });
+    },
+    characterSelect: function (array) {
+        for (i = 0; i < array.length; i++) {
+            var indexArray = '#' + array[i];
+            $("#row2").append($(indexArray));
+            $(indexArray).removeClass("character").addClass("enemy");
+            $(indexArray).attr('value', 'enemy');
         }
-        if (element.divid.includes(actualEnemy)) {
-            enemyHP = element.hp;
-            enemyAttack = element.attack;
+    },
+    enemySelect: function (array) {
+        for (i = 0; i < array.length; i++) {
+            var indexArray = '#' + array[i];
+            $("#row3").append($(indexArray));
+            $(indexArray).removeClass("enemy").addClass("waiting");
+            $(indexArray).attr('value', 'waiting');
         }
-    });
-
-    gameObject.characters.forEach(element => {
-        if (element.divid.includes(character)) {
-            element.hp = element.hp - enemyAttack;
-            if (element.hp < 0) {
-                characterElement = '#' + character;
-                $(characterElement).remove();
-                audioLose.play();
-                $('#message').text('You lost the game!')
+    },
+    attack: function () {
+        this.characters.forEach(element => {
+            if (element.divid.includes(this.choosenCharacter)) {
+                this.characterHP = element.hp;
+                this.characterAttack = element.attack;
+                element.attack = element.attack + element.increaseAttack;
             }
-        }
-        if (element.divid.includes(actualEnemy)) {
-            element.hp = element.hp - characterAttack;
-            if (element.hp < 0) {
-                $('#attack').hide()
-                enemyElement = '#' + actualEnemy;
-                $(enemyElement).remove();
-                defeated++;
-                if (defeated === 3) {
-                    audioWin.play();
-                    $('#message').text('You won the game!')
+            if (element.divid.includes(this.choosenEnemy)) {
+                this.enemyHP = element.hp;
+                this.enemyAttack = element.attack;
+            }
+        });
+        this.characters.forEach(element => {
+            if (element.divid.includes(this.choosenCharacter)) {
+                element.hp = element.hp - this.enemyAttack;
+                console.log(element.hp)
+                if (element.hp < 0) {
+                    characterElement = '#' + character;
+                    $(characterElement).remove();
+                    audioLose.play();
+                    $('#message').text('You lost the game!')
                 }
             }
-        }
-    })
-    elementGenerator();
-
+            if (element.divid.includes(this.choosenEnemy)) {
+                element.hp = element.hp - this.characterAttack;
+                if (element.hp < 0) {
+                    $('#attack').hide()
+                    enemyElement = '#' + this.choosenEnemy;
+                    $(enemyElement).remove();
+                    this.charactersDefeated++;
+                    if (this.charactersDefeated === 3) {
+                        audioWin.play();
+                        $('#message').text('You won the game!')
+                    }
+                }
+            }
+        })
+        this.elementGenerator();
+    }
 }
 
-$('.character').on('click', function () {
+// Making sure the doc is ready
+$(function() {
 
+// Click functions 
+$('.character').on('click', function () {
     if ($(this).attr('value') === 'character') {
-        character = $(this).attr('id');
+        gameObject.choosenCharacter = $(this).attr('id');
         var newArray = function (posibleNums) {
-            return posibleNums != character
+            return posibleNums != gameObject.choosenCharacter
         }
-        posiblePicks = posiblePicks.filter(newArray);
-        insideCharacter(posiblePicks);
+        gameObject.posiblePicks = gameObject.posiblePicks.filter(newArray);
+        gameObject.characterSelect(gameObject.posiblePicks);
     }
     else if ($(this).attr('value') === 'enemy') {
-        actualEnemy = $(this).attr('id');
+        gameObject.choosenEnemy = $(this).attr('id');
         var newArray = function (posibleNums) {
-            return posibleNums != actualEnemy;
+            return posibleNums != gameObject.choosenEnemy;
         }
-        posiblePicks = posiblePicks.filter(newArray);
-        insideEnemy(posiblePicks);
+        gameObject.posiblePicks = gameObject.posiblePicks.filter(newArray);
+        gameObject.enemySelect(gameObject.posiblePicks);
         $('#attack').show()
     }
-
     else if ($(this).attr('value') === 'waiting') {
         $(this).attr('value', 'enemy');
         $("#row2").append($(this));
         $(this).removeClass("waiting").addClass("enemy");
-        actualEnemy = $(this).attr('id');
+        gameObject.choosenEnemy = $(this).attr('id');
         $('#attack').show()
     }
-
 });
 
-
 $('#attack').on('click', function () {
-
     audioAttack.play();
-    attack();
-
+    gameObject.attack();
 })
 
-elementGenerator();
+gameObject.elementGenerator();
 
+});
